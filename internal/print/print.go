@@ -5,11 +5,11 @@ import (
 	"fmt"
 	"strings"
 
-	"upgit/internal/gomod"
+	"upgit/internal/models"
 )
 
 // PrintModulesPlain выводит информацию о модулях и зависимостях в обычном формате
-func PrintModulesPlain(modules []*gomod.ModuleInfo) {
+func PrintModulesPlain(modules []*models.ModuleInfo) {
 	for _, mod := range modules {
 		fmt.Printf("Модуль: %s\n", mod.Name)
 		fmt.Printf("Go версия: %s\n", mod.GoVersion)
@@ -26,7 +26,7 @@ func PrintModulesPlain(modules []*gomod.ModuleInfo) {
 }
 
 // PrintUpdatesPlain выводит список зависимостей с доступными обновлениями
-func PrintUpdatesPlain(updates []*gomod.DependencyUpdate) {
+func PrintUpdatesPlain(updates []*models.DependencyUpdate) {
 	if len(updates) == 0 {
 		fmt.Println("Все зависимости актуальны")
 		return
@@ -39,7 +39,7 @@ func PrintUpdatesPlain(updates []*gomod.DependencyUpdate) {
 }
 
 // PrintModulesJSON выводит модули и зависимости в JSON
-func PrintModulesJSON(modules []*gomod.ModuleInfo, updates []*gomod.DependencyUpdate) {
+func PrintModulesJSON(modules []*models.ModuleInfo, updates []*models.DependencyUpdate) {
 	data := map[string]interface{}{
 		"modules": modules,
 		"updates": updates,

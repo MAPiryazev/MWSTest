@@ -5,24 +5,13 @@ import (
 	"os"
 	"path/filepath"
 
+	"upgit/internal/models"
+
 	"golang.org/x/mod/modfile"
 )
 
-// ModuleInfo информация о модуле и его зависимостях
-type ModuleInfo struct {
-	Name      string
-	GoVersion string
-	Deps      []*Dependency
-}
-
-// Dependency - зависимости из go.mod
-type Dependency struct {
-	Path    string
-	Version string
-}
-
 // ParseAllModules ищет все go.mod в репозитории и парсит их
-func ParseAllModules(repoPath string) ([]*ModuleInfo, error) {
+func ParseAllModules(repoPath string) ([]*models.ModuleInfo, error) {
 	modFiles, err := findGoModsHelper(repoPath)
 	if err != nil {
 		return nil, fmt.Errorf("не удалось нйти go.mod: %w", err)
@@ -31,7 +20,7 @@ func ParseAllModules(repoPath string) ([]*ModuleInfo, error) {
 		return nil, fmt.Errorf("в репозитории не найдено go.mod файлов")
 	}
 
-	var modules []*ModuleInfo
+	var modules []*models.ModuleInfo
 	for _, modPath := range modFiles {
 		mod, err := parseGoModHelper(modPath)
 		if err != nil {
@@ -59,7 +48,7 @@ func findGoModsHelper(root string) ([]string, error) {
 }
 
 // parseGoModHelper парсит go.mod и возвращает ModuleInfo
-func parseGoModHelper(path string) (*ModuleInfo, error) {
+func parseGoModHelper(path string) (*models.ModuleInfo, error) {
 	data, err := os.ReadFile(path)
 	if err != nil {
 		return nil, fmt.Errorf("ошибка при чтении файла %s: %w", path, err)
@@ -78,14 +67,14 @@ func parseGoModHelper(path string) (*ModuleInfo, error) {
 		return nil, fmt.Errorf("в go.mod %s не найден модуль (module)", path)
 	}
 
-	mod := &ModuleInfo{
+	mod := &models.ModuleInfo{
 		Name:      f.Module.Mod.Path,
 		GoVersion: f.Go.Version,
 	}
 
 	if f.Require != nil {
 		for _, r := range f.Require {
-			mod.Deps = append(mod.Deps, &Dependency{
+			mod.Deps = append(mod.Deps, &models.Dependency{
 				Path:    r.Mod.Path,
 				Version: r.Mod.Version,
 			})

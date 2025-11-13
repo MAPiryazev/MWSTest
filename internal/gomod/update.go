@@ -5,19 +5,12 @@ import (
 	"encoding/json"
 	"fmt"
 	"os/exec"
+
+	"upgit/internal/models"
 )
 
-// DependencyUpdate информация о обновлениях
-type DependencyUpdate struct {
-	Path    string
-	Version string
-	Update  *struct {
-		Version string // Новая доступная версия
-	}
-}
-
 // CheckUpdates проверяет обновления зависимостей
-func CheckUpdates(repoPath string) ([]*DependencyUpdate, error) {
+func CheckUpdates(repoPath string) ([]*models.DependencyUpdate, error) {
 	// go list -m -u -json all
 	cmd := exec.Command("go", "list", "-m", "-u", "-json", "all")
 	cmd.Dir = repoPath
@@ -33,10 +26,10 @@ func CheckUpdates(repoPath string) ([]*DependencyUpdate, error) {
 	}
 
 	dec := json.NewDecoder(&out)
-	var updates []*DependencyUpdate
+	var updates []*models.DependencyUpdate
 
 	for dec.More() {
-		var dep DependencyUpdate
+		var dep models.DependencyUpdate
 		err := dec.Decode(&dep)
 		if err != nil {
 			return nil, fmt.Errorf("ошибка при разборе json от 'go list': %w", err)

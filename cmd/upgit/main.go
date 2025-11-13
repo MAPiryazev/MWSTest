@@ -3,7 +3,6 @@ package main
 import (
 	"flag"
 	"fmt"
-	"log"
 	"os"
 
 	"upgit/internal/gitrepo"
@@ -13,7 +12,6 @@ import (
 )
 
 func main() {
-	log.SetFlags(log.LstdFlags | log.Lshortfile)
 
 	flags := parseFlags()
 	if flags.RepoURL == "" {
@@ -49,7 +47,7 @@ func main() {
 	}
 }
 
-// parseFlags  флаги и возвращает структуру Flags
+// parseFlags флаги и возвращает структуру Flags
 func parseFlags() *models.Flags {
 	repoURL := flag.String("repo", "", "URL git репозитория")
 	jsonOutput := flag.Bool("json", false, "Вывод в формате JSON")
